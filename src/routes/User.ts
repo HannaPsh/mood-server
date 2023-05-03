@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.post('/create', ValidateJoi(Schemas.user.createUser), controller.createUser);
 router.get('/get/:userId', controller.readUser);
-router.get('/allusers', controller.readAll);
+router.get('/allMoodUsers', controller.readAll);
 router.patch('/update/:userId', ValidateJoi(Schemas.user.updateUser), controller.updateUser);
 router.delete('/delete/:userId', controller.deleteUser);
-router.patch('/update-dailylog/:userId/:date', ValidateJoi(Schemas.user.updateDailyLog), controller.updateDailyLog);
+router.patch('/update-dailylog/:userId', ValidateJoi(Schemas.user.updateDailyLog), controller.updateDailyLog);
 
 export = router;

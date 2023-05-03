@@ -25,7 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const DailyLogSchema = new mongoose_1.Schema({
-    date: { type: Date, required: true },
+    date: { type: String, required: true },
     emotions: {
         anger: [{ type: String }],
         love: [{ type: String }],

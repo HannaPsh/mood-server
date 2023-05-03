@@ -40,7 +40,6 @@ exports.Schemas = {
         }),
         readAll: joi_1.default.object({}),
         updateUser: joi_1.default.object({
-            userId: joi_1.default.string().required(),
             name: joi_1.default.string().required(),
             email: joi_1.default.string().email().required()
         }),
@@ -48,8 +47,7 @@ exports.Schemas = {
             userId: joi_1.default.string().required()
         }),
         updateDailyLog: joi_1.default.object({
-            userId: joi_1.default.string().required(),
-            date: joi_1.default.date().required()
+            emotions: joi_1.default.object().required()
         }),
         login: joi_1.default.object({
             email: joi_1.default.string().email().required(),

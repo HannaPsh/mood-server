@@ -89,18 +89,26 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 });
 const updateDailyLog = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.userId;
-    const date = req.params.date;
+    const dateToday = new Date().toISOString().slice(0, 10);
+    console.log(dateToday);
     try {
         const user = yield User_1.default.findById(userId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        const dailyLog = user.dailyLogs.find((log) => log.date.toISOString().slice(0, 10) === date);
-        if (!dailyLog) {
-            return res.status(404).json({ message: `Daily log for ${date} not found` });
-        }
+        let dailyLog = user.dailyLogs.find((log) => log.date.toString().slice(0, 10) === dateToday);
+        let log = user.dailyLogs.find((log) => console.log(log.date.toString().slice(0, 10)));
         const { emotions } = req.body;
-        dailyLog.emotions = emotions;
+        if (!dailyLog) {
+            dailyLog = {
+                date: dateToday,
+                emotions: emotions
+            };
+            user.dailyLogs.push(dailyLog);
+        }
+        else {
+            dailyLog.emotions = Object.assign(Object.assign({}, dailyLog.emotions), emotions);
+        }
         const savedUser = yield user.save();
         res.status(200).json({ user: savedUser });
     }

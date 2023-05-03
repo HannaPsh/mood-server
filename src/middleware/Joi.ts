@@ -28,7 +28,6 @@ export const Schemas = {
         }),
         readAll: Joi.object({}),
         updateUser: Joi.object({
-            userId: Joi.string().required(),
             name: Joi.string().required(),
             email: Joi.string().email().required()
         }),
@@ -36,8 +35,7 @@ export const Schemas = {
             userId: Joi.string().required()
         }),
         updateDailyLog: Joi.object({
-            userId: Joi.string().required(),
-            date: Joi.date().required()
+            emotions: Joi.object().required()
         }),
         login: Joi.object({
             email: Joi.string().email().required(),

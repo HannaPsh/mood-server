@@ -1,5 +1,5 @@
 export interface IDailyLog {
-    date: Date;
+    date: string;
     emotions: {
         anger: string[];
         love: string[];
