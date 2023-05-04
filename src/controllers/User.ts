@@ -35,11 +35,11 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(401).json({ message: 'Auth failed' });
+            return res.status(401).json({ message: 'User is not registered' });
         }
 
         if (user.password !== password) {
-            return res.status(401).json({ message: 'Auth failed' });
+            return res.status(401).json({ message: 'Wrong password' });
         }
 
         res.status(200).json({ message: 'Auth successful' });

@@ -39,10 +39,10 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const user = yield User_1.default.findOne({ email });
         if (!user) {
-            return res.status(401).json({ message: 'Auth failed' });
+            return res.status(401).json({ message: 'User is not registered' });
         }
         if (user.password !== password) {
-            return res.status(401).json({ message: 'Auth failed' });
+            return res.status(401).json({ message: 'Wrong password' });
         }
         res.status(200).json({ message: 'Auth successful' });
     }

@@ -5,6 +5,7 @@ import { Schemas, ValidateJoi } from '../middleware/Joi';
 const router = express.Router();
 
 router.post('/create', ValidateJoi(Schemas.user.createUser), controller.createUser);
+router.post('/login', ValidateJoi(Schemas.user.login), controller.login);
 router.get('/get/:userId', controller.readUser);
 router.get('/allMoodUsers', controller.readAll);
 router.patch('/update/:userId', ValidateJoi(Schemas.user.updateUser), controller.updateUser);

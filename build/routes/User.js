@@ -7,6 +7,7 @@ const User_1 = __importDefault(require("../controllers/User"));
 const Joi_1 = require("../middleware/Joi");
 const router = express_1.default.Router();
 router.post('/create', (0, Joi_1.ValidateJoi)(Joi_1.Schemas.user.createUser), User_1.default.createUser);
+router.post('/login', (0, Joi_1.ValidateJoi)(Joi_1.Schemas.user.login), User_1.default.login);
 router.get('/get/:userId', User_1.default.readUser);
 router.get('/allMoodUsers', User_1.default.readAll);
 router.patch('/update/:userId', (0, Joi_1.ValidateJoi)(Joi_1.Schemas.user.updateUser), User_1.default.updateUser);
