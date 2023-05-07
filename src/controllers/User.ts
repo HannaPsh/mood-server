@@ -27,7 +27,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
         res.status(500).json({ error });
     }
 };
-
+//TODO: add token
 const login = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
 
@@ -42,7 +42,9 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
             return res.status(401).json({ message: 'Wrong password' });
         }
 
-        res.status(200).json({ message: 'Auth successful' });
+        const { _id, name, dailyLogs } = user;
+
+        res.status(200).json({ message: 'Auth successful', user: { id: _id, name: name, email: email, password: password, dailyLogs: dailyLogs } }); //TODO:add JWT instead!!!!
     } catch (error) {
         res.status(500).json({ error });
     }
@@ -107,7 +109,7 @@ const updateDailyLog = async (req: Request, res: Response, next: NextFunction) =
         }
 
         let dailyLog = user.dailyLogs.find((log) => log.date.toString().slice(0, 10) === dateToday);
-        let log = user.dailyLogs.find((log) => console.log(log.date.toString().slice(0, 10)));
+        /* let log = user.dailyLogs.find((log) => console.log(log.date.toString().slice(0, 10))); */
         const { emotions } = req.body;
 
         if (!dailyLog) {
