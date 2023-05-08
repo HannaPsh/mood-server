@@ -46,9 +46,9 @@ exports.Schemas = {
         deleteUser: joi_1.default.object({
             userId: joi_1.default.string().required()
         }),
-        updateDailyLog: joi_1.default.object({
-            emotions: joi_1.default.object().required()
-        }),
+        /*  updateDailyLog: Joi.object({
+            emotions: Joi.array().items(Joi.string()).required()
+        }), */
         login: joi_1.default.object({
             email: joi_1.default.string().email().required(),
             password: joi_1.default.string().required()

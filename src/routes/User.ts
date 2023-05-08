@@ -10,6 +10,6 @@ router.get('/get/:userId', controller.readUser);
 router.get('/allMoodUsers', controller.readAll);
 router.patch('/update/:userId', ValidateJoi(Schemas.user.updateUser), controller.updateUser);
 router.delete('/delete/:userId', controller.deleteUser);
-router.patch('/update-dailylog/:userId', ValidateJoi(Schemas.user.updateDailyLog), controller.updateDailyLog);
+router.patch('/update-dailylog/:userId/:category' /* , ValidateJoi(Schemas.user.updateDailyLog) */, controller.updateDailyLog);
 
 export = router;

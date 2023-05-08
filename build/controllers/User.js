@@ -89,28 +89,67 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         res.status(500).json({ error });
     }
 });
-const updateDailyLog = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+/* const updateDailyLog = async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.params.userId;
     const dateToday = new Date().toISOString().slice(0, 10);
     console.log(dateToday);
+
     try {
-        const user = yield User_1.default.findById(userId);
+        const user = await User.findById(userId);
+
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
+
         let dailyLog = user.dailyLogs.find((log) => log.date.toString().slice(0, 10) === dateToday);
-        /* let log = user.dailyLogs.find((log) => console.log(log.date.toString().slice(0, 10))); */
         const { emotions } = req.body;
+
         if (!dailyLog) {
             dailyLog = {
                 date: dateToday,
                 emotions: emotions
             };
             user.dailyLogs.push(dailyLog);
+        } else {
+            dailyLog.emotions = {
+                ...dailyLog.emotions,
+                ...emotions
+            };
         }
-        else {
-            dailyLog.emotions = Object.assign(Object.assign({}, dailyLog.emotions), emotions);
+
+        const savedUser = await user.save();
+
+        res.status(200).json({ user: savedUser });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+}; */
+const updateDailyLog = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userId;
+    const category = req.params.category; /* as keyof IDailyLog['emotions'] */
+    const dateToday = new Date().toISOString().slice(0, 10);
+    try {
+        const user = yield User_1.default.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
         }
+        let dailyLog = user.dailyLogs.find((log) => log.date.toString().slice(0, 10) === dateToday);
+        const emotionsList = req.body;
+        if (!dailyLog) {
+            dailyLog = {
+                date: dateToday,
+                emotions: {
+                    anger: [],
+                    love: [],
+                    sadness: [],
+                    scared: [],
+                    happy: []
+                }
+            };
+            user.dailyLogs.push(dailyLog);
+        }
+        const updatedEmotions = Object.assign(Object.assign({}, dailyLog.emotions), { [category]: emotionsList });
+        dailyLog.emotions = updatedEmotions;
         const savedUser = yield user.save();
         res.status(200).json({ user: savedUser });
     }

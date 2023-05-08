@@ -34,9 +34,9 @@ export const Schemas = {
         deleteUser: Joi.object({
             userId: Joi.string().required()
         }),
-        updateDailyLog: Joi.object({
-            emotions: Joi.object().required()
-        }),
+        /*  updateDailyLog: Joi.object({
+            emotions: Joi.array().items(Joi.string()).required()
+        }), */
         login: Joi.object({
             email: Joi.string().email().required(),
             password: Joi.string().required()
