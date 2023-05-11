@@ -11,5 +11,6 @@ router.get('/allMoodUsers', controller.readAll);
 router.patch('/update/:userId', ValidateJoi(Schemas.user.updateUser), controller.updateUser);
 router.delete('/delete/:userId', controller.deleteUser);
 router.patch('/update-dailylog/:userId/:category' /* , ValidateJoi(Schemas.user.updateDailyLog) */, controller.updateDailyLog);
-
+router.get('/emotions/:userId/:category', controller.getEmotionsByCategory);
+router.get('/dailylog/:userId', controller.getDailyLog);
 export = router;

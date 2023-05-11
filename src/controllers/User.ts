@@ -152,4 +152,54 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
         return res.status(500).json({ error });
     }
 };
-export default { createUser, readUser, readAll, updateUser, deleteUser, updateDailyLog, login };
+
+const getEmotionsByCategory = async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.userId;
+    const category = req.params.category;
+    const dateToday = new Date().toISOString().slice(0, 10); // Get today's date
+
+    try {
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const dailyLogs = user.dailyLogs;
+        const emotionsList = dailyLogs.reduce((result: string[], log: IDailyLog) => {
+            // Check if the log's date matches today's date and retrieve the emotions by category
+            if (log.date.toString().slice(0, 10) === dateToday) {
+                return result.concat(log.emotions[category as keyof typeof log.emotions]);
+            }
+            return result;
+        }, []);
+
+        res.status(200).json({ emotions: emotionsList });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+};
+const getDailyLog = async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.userId;
+    const date = req.query.date as string;
+
+    try {
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const dailyLog = user.dailyLogs.find((log: IDailyLog) => log.date === date);
+
+        if (!dailyLog) {
+            return res.status(404).json({ message: 'Daily log not found' });
+        }
+
+        res.status(200).json({ dailyLog });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+};
+
+export default { createUser, readUser, readAll, updateUser, deleteUser, updateDailyLog, login, getEmotionsByCategory, getDailyLog };

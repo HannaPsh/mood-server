@@ -89,41 +89,6 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         res.status(500).json({ error });
     }
 });
-/* const updateDailyLog = async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.params.userId;
-    const dateToday = new Date().toISOString().slice(0, 10);
-    console.log(dateToday);
-
-    try {
-        const user = await User.findById(userId);
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        let dailyLog = user.dailyLogs.find((log) => log.date.toString().slice(0, 10) === dateToday);
-        const { emotions } = req.body;
-
-        if (!dailyLog) {
-            dailyLog = {
-                date: dateToday,
-                emotions: emotions
-            };
-            user.dailyLogs.push(dailyLog);
-        } else {
-            dailyLog.emotions = {
-                ...dailyLog.emotions,
-                ...emotions
-            };
-        }
-
-        const savedUser = await user.save();
-
-        res.status(200).json({ user: savedUser });
-    } catch (error) {
-        res.status(500).json({ error });
-    }
-}; */
 const updateDailyLog = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.userId;
     const category = req.params.category; /* as keyof IDailyLog['emotions'] */
@@ -170,4 +135,45 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         return res.status(500).json({ error });
     }
 });
-exports.default = { createUser, readUser, readAll, updateUser, deleteUser, updateDailyLog, login };
+const getEmotionsByCategory = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userId;
+    const category = req.params.category;
+    const dateToday = new Date().toISOString().slice(0, 10); // Get today's date
+    try {
+        const user = yield User_1.default.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const dailyLogs = user.dailyLogs;
+        const emotionsList = dailyLogs.reduce((result, log) => {
+            // Check if the log's date matches today's date and retrieve the emotions by category
+            if (log.date.toString().slice(0, 10) === dateToday) {
+                return result.concat(log.emotions[category]);
+            }
+            return result;
+        }, []);
+        res.status(200).json({ emotions: emotionsList });
+    }
+    catch (error) {
+        res.status(500).json({ error });
+    }
+});
+const getDailyLog = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userId;
+    const date = req.query.date;
+    try {
+        const user = yield User_1.default.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const dailyLog = user.dailyLogs.find((log) => log.date === date);
+        if (!dailyLog) {
+            return res.status(404).json({ message: 'Daily log not found' });
+        }
+        res.status(200).json({ dailyLog });
+    }
+    catch (error) {
+        res.status(500).json({ error });
+    }
+});
+exports.default = { createUser, readUser, readAll, updateUser, deleteUser, updateDailyLog, login, getEmotionsByCategory, getDailyLog };
