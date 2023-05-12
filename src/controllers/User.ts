@@ -201,5 +201,23 @@ const getDailyLog = async (req: Request, res: Response, next: NextFunction) => {
         res.status(500).json({ error });
     }
 };
+const getDailyLogDates = async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.userId;
 
-export default { createUser, readUser, readAll, updateUser, deleteUser, updateDailyLog, login, getEmotionsByCategory, getDailyLog };
+    try {
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const dailyLogs = user.dailyLogs;
+        const dates = dailyLogs.map((log: IDailyLog) => log.date);
+
+        res.status(200).json({ dates });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+};
+
+export default { createUser, readUser, readAll, updateUser, deleteUser, updateDailyLog, login, getEmotionsByCategory, getDailyLog, getDailyLogDates };
