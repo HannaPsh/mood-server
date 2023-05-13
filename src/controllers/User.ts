@@ -190,10 +190,13 @@ const getDailyLog = async (req: Request, res: Response, next: NextFunction) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const dailyLog = user.dailyLogs.find((log: IDailyLog) => log.date === date);
+        let dailyLog = user.dailyLogs.find((log: IDailyLog) => log.date === date);
 
         if (!dailyLog) {
-            return res.status(404).json({ message: 'Daily log not found' });
+            // Create a new daily log with empty arrays for each category
+            dailyLog = { date, emotions: { anger: [], love: [], sadness: [], scared: [], happy: [] } };
+            user.dailyLogs.push(dailyLog);
+            await user.save();
         }
 
         res.status(200).json({ dailyLog });
@@ -201,6 +204,7 @@ const getDailyLog = async (req: Request, res: Response, next: NextFunction) => {
         res.status(500).json({ error });
     }
 };
+
 const getDailyLogDates = async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.params.userId;
 
