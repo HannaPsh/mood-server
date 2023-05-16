@@ -114,6 +114,7 @@ const updateDailyLog = async (req: Request, res: Response, next: NextFunction) =
 
         if (!dailyLog) {
             dailyLog = {
+                notes: '',
                 date: dateToday,
                 emotions: {
                     anger: [],
@@ -128,6 +129,44 @@ const updateDailyLog = async (req: Request, res: Response, next: NextFunction) =
 
         const updatedEmotions = { ...dailyLog.emotions, [category]: emotionsList };
         dailyLog.emotions = updatedEmotions;
+
+        const savedUser = await user.save();
+
+        res.status(200).json({ user: savedUser });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+};
+const updateNotesInDailyLog = async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.userId;
+    const { notes } = req.body;
+    const dateToday = new Date().toISOString().slice(0, 10);
+
+    try {
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        let dailyLog: IDailyLog | undefined = user.dailyLogs.find((log: IDailyLog) => log.date.toString().slice(0, 10) === dateToday);
+
+        if (!dailyLog) {
+            dailyLog = {
+                notes: '',
+                date: dateToday,
+                emotions: {
+                    anger: [],
+                    love: [],
+                    sadness: [],
+                    scared: [],
+                    happy: []
+                }
+            };
+            user.dailyLogs.push(dailyLog);
+        }
+
+        dailyLog.notes = notes;
 
         const savedUser = await user.save();
 
@@ -167,7 +206,6 @@ const getEmotionsByCategory = async (req: Request, res: Response, next: NextFunc
 
         const dailyLogs = user.dailyLogs;
         const emotionsList = dailyLogs.reduce((result: string[], log: IDailyLog) => {
-            // Check if the log's date matches today's date and retrieve the emotions by category
             if (log.date.toString().slice(0, 10) === dateToday) {
                 return result.concat(log.emotions[category as keyof typeof log.emotions]);
             }
@@ -220,4 +258,4 @@ const getDailyLogDates = async (req: Request, res: Response, next: NextFunction)
     }
 };
 
-export default { createUser, readUser, readAll, updateUser, deleteUser, updateDailyLog, login, getEmotionsByCategory, getDailyLog, getDailyLogDates };
+export default { createUser, readUser, readAll, updateUser, deleteUser, updateDailyLog, login, getEmotionsByCategory, getDailyLog, getDailyLogDates, updateNotesInDailyLog };

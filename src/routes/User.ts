@@ -14,4 +14,5 @@ router.patch('/update-dailylog/:userId/:category' /* , ValidateJoi(Schemas.user.
 router.get('/emotions/:userId/:category', controller.getEmotionsByCategory);
 router.get('/dailylog/:userId', controller.getDailyLog);
 router.get('/dailylog-dates/:userId', controller.getDailyLogDates);
+router.patch('/add-notes/:userId', controller.updateNotesInDailyLog);
 export = router;

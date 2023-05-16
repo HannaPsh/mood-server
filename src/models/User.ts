@@ -3,6 +3,7 @@ import { IDailyLog, IUser } from '../types';
 
 const DailyLogSchema = new Schema<IDailyLog>(
     {
+        notes: { type: String },
         date: { type: String, required: true },
         emotions: {
             anger: [{ type: String }],
